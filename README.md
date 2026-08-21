@@ -4,6 +4,15 @@ A hosted Model Context Protocol (MCP) server that gives Claude, Cursor, Windsurf
 
 It reads public data about accounts. It does not act as an account. There is nothing to connect and no account of yours involved anywhere in the flow.
 
+```
+https://mcp.hasdata.com/api/mcp?apis=instagram
+```
+
+[![tool contract](https://github.com/HasData/instagram-mcp/actions/workflows/contract.yml/badge.svg)](https://github.com/HasData/instagram-mcp/actions/workflows/contract.yml)
+[![MCP](https://img.shields.io/badge/MCP-remote%20%7C%20streamable%20HTTP-6366f1?style=flat-square)](https://modelcontextprotocol.io)
+[![Tools](https://img.shields.io/badge/tools-2-10b981?style=flat-square)](#tools)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+
 ## Contents
 
 - [What you need](#what-you-need)
