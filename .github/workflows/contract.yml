@@ -1,0 +1,31 @@
+# The tool contract is checked on a schedule as well as on push, because the upstream tool list
+# can change without a single commit in this repository.
+name: tool contract
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # Forks cannot read repository secrets. The suite skips its live checks when the key is
+      # absent, so a pull request from a fork stays green instead of failing for a reason the
+      # contributor cannot fix.
+      - name: Assert the tool list still matches the README
+        env:
+          HASDATA_API_KEY: ${{ secrets.HASDATA_API_KEY }}
+        run: npm test

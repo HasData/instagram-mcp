@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.hasdata/instagram",
+  "title": "HasData Instagram",
+  "description": "Public Instagram profiles and post feeds by handle, with hashtags and mentions parsed.",
+  "version": "1.0.0",
+  "websiteUrl": "https://hasdata.com/apis/instagram-profile-api",
+  "repository": {
+    "url": "https://github.com/HasData/instagram-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.hasdata.com/api/mcp?apis=instagram",
+      "headers": [
+        {
+          "name": "x-api-key",
+          "description": "HasData API key, created at app.hasdata.com. The free trial needs no card.",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
