@@ -30,7 +30,7 @@ An MCP client that speaks streamable HTTP with custom headers. A HasData API key
 | :--- | :--- |
 | URL | `https://mcp.hasdata.com/api/mcp?apis=instagram` |
 | Transport | HTTP, streamable |
-| Auth header | `x-api-key: your_key_here` |
+| Auth header | `x-api-key: HASDATA_API_KEY` |
 
 The server URL is the same for every client. We run it hands-on in Claude Code and Claude Desktop. The other blocks follow each client's own documented format for a remote server.
 
@@ -41,7 +41,7 @@ Clients with OAuth support can add the same URL as a connector and sign in witho
 
 ```bash
 claude mcp add --transport http instagram "https://mcp.hasdata.com/api/mcp?apis=instagram" \
-  --header "x-api-key: your_key_here"
+  --header "x-api-key: HASDATA_API_KEY"
 ```
 
 </details>
@@ -63,7 +63,7 @@ Claude Desktop loads only local (stdio) servers from its config file, so a remot
         "mcp-remote",
         "https://mcp.hasdata.com/api/mcp?apis=instagram",
         "--header",
-        "x-api-key:your_key_here"
+        "x-api-key:HASDATA_API_KEY"
       ]
     }
   }
@@ -84,7 +84,7 @@ The `x-api-key:` value carries no space after the colon. Claude Desktop passes t
   "mcpServers": {
     "instagram": {
       "url": "https://mcp.hasdata.com/api/mcp?apis=instagram",
-      "headers": { "x-api-key": "your_key_here" }
+      "headers": { "x-api-key": "HASDATA_API_KEY" }
     }
   }
 }
@@ -102,7 +102,7 @@ The `x-api-key:` value carries no space after the colon. Claude Desktop passes t
   "mcpServers": {
     "instagram": {
       "serverUrl": "https://mcp.hasdata.com/api/mcp?apis=instagram",
-      "headers": { "x-api-key": "your_key_here" }
+      "headers": { "x-api-key": "HASDATA_API_KEY" }
     }
   }
 }
@@ -119,7 +119,7 @@ The `x-api-key:` value carries no space after the colon. Claude Desktop passes t
     "instagram": {
       "url": "https://mcp.hasdata.com/api/mcp?apis=instagram",
       "type": "streamableHttp",
-      "headers": { "x-api-key": "your_key_here" },
+      "headers": { "x-api-key": "HASDATA_API_KEY" },
       "disabled": false
     }
   }
@@ -139,7 +139,7 @@ The `x-api-key:` value carries no space after the colon. Claude Desktop passes t
     "instagram": {
       "type": "http",
       "url": "https://mcp.hasdata.com/api/mcp?apis=instagram",
-      "headers": { "x-api-key": "your_key_here" }
+      "headers": { "x-api-key": "HASDATA_API_KEY" }
     }
   }
 }
@@ -157,7 +157,7 @@ The `x-api-key:` value carries no space after the colon. Claude Desktop passes t
   "mcpServers": {
     "instagram": {
       "httpUrl": "https://mcp.hasdata.com/api/mcp?apis=instagram",
-      "headers": { "x-api-key": "your_key_here" }
+      "headers": { "x-api-key": "HASDATA_API_KEY" }
     }
   }
 }
