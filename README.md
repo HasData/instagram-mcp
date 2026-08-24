@@ -1,5 +1,7 @@
 # Instagram MCP Server
 
+<!-- mcp-name: com.hasdata/instagram -->
+
 A hosted Model Context Protocol (MCP) server that gives Claude, Cursor, Windsurf and any other MCP client two read-only Instagram tools. Look up a public profile by handle, and walk its public post feed, as structured JSON.
 
 It reads public data about accounts. It does not act as an account. There is nothing to connect and no account of yours involved anywhere in the flow.
@@ -8,6 +10,7 @@ It reads public data about accounts. It does not act as an account. There is not
 https://mcp.hasdata.com/api/mcp?apis=instagram
 ```
 
+[![Glama score](https://glama.ai/mcp/servers/HasData/instagram-mcp/badges/score.svg)](https://glama.ai/mcp/servers/HasData/instagram-mcp)
 [![tool contract](https://github.com/HasData/instagram-mcp/actions/workflows/contract.yml/badge.svg)](https://github.com/HasData/instagram-mcp/actions/workflows/contract.yml)
 [![MCP](https://img.shields.io/badge/MCP-remote%20%7C%20streamable%20HTTP-6366f1?style=flat-square)](https://modelcontextprotocol.io)
 [![Tools](https://img.shields.io/badge/tools-2-10b981?style=flat-square)](#tools)

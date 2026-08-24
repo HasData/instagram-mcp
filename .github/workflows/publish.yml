@@ -1,0 +1,65 @@
+# Publishes the npm and PyPI wrapper packages on a version tag, using OIDC
+# trusted publishing. No NPM_TOKEN or PYPI_TOKEN is stored anywhere: GitHub
+# mints a short-lived OIDC token per run, and npmjs.org / pypi.org accept it
+# because this repo + workflow are configured as trusted publishers.
+#
+# One-time setup, done once per package on the registries (not in this repo):
+#   npmjs.org  -> package settings -> Trusted Publisher -> GitHub Actions,
+#                 repo HasData/instagram-mcp, workflow publish.yml
+#   pypi.org   -> the hasdata org -> Publishing -> add a trusted publisher
+#                 (pending publisher works before the first release),
+#                 repo HasData/instagram-mcp, workflow publish.yml
+#
+# The MCP registry entry (com.hasdata/instagram) is NOT published here. It uses
+# domain auth, which would need the namespace-wide Ed25519 key as a secret in
+# every repo. That key stays off CI; the registry entry is published by hand
+# when server.json changes, after the package versions below are live.
+#
+# Release: bump nothing by hand. Tag the commit `vX.Y.Z` and push the tag; the
+# tag is the single source of the version and is written into both manifests.
+
+name: publish
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Set version from the tag
+        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --allow-same-version
+      - name: Publish to npm (OIDC, no token)
+        run: npm publish --access public
+
+  pypi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Set version from the tag
+        run: |
+          python - "${GITHUB_REF_NAME#v}" <<'PY'
+          import re, sys
+          v = sys.argv[1]
+          p = "pyproject.toml"
+          t = open(p, encoding="utf-8").read()
+          t = re.sub(r'(?m)^version = ".*"$', f'version = "{v}"', t, count=1)
+          open(p, "w", encoding="utf-8", newline="\n").write(t)
+          PY
+      - name: Build the wheel and sdist
+        run: pipx run build
+      - name: Publish to PyPI (OIDC, no token)
+        uses: pypa/gh-action-pypi-publish@release/v1
