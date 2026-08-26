@@ -1,6 +1,6 @@
 [project]
 name = "hasdata-instagram-mcp"
-version = "1.0.0"
+version = "1.0.1"
 description = "MCP server for public Instagram data through HasData's hosted API. Reads public data only."
 readme = "README.md"
 requires-python = ">=3.10"

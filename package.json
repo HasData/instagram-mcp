@@ -1,16 +1,40 @@
 {
   "name": "@hasdata/instagram-mcp",
   "mcpName": "com.hasdata/instagram",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for public Instagram data through HasData's hosted API: profile lookup by handle and public post feed, as structured JSON. Reads public data only.",
   "type": "module",
-  "bin": { "hasdata-instagram-mcp": "index.mjs" },
-  "files": ["index.mjs", "README.md", "LICENSE"],
-  "scripts": { "test": "node --test" },
-  "dependencies": { "mcp-remote": "^0.1.43" },
-  "engines": { "node": ">=18" },
+  "bin": {
+    "hasdata-instagram-mcp": "index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "mcp-remote": "^0.1.43"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "license": "MIT",
-  "repository": { "type": "git", "url": "https://github.com/HasData/instagram-mcp.git" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HasData/instagram-mcp.git"
+  },
   "homepage": "https://hasdata.com/apis/instagram-profile-api",
-  "keywords": ["mcp", "instagram", "instagram-mcp", "profile", "posts", "model-context-protocol", "hasdata", "scraper"]
+  "keywords": [
+    "mcp",
+    "instagram",
+    "instagram-mcp",
+    "profile",
+    "posts",
+    "model-context-protocol",
+    "hasdata",
+    "scraper"
+  ]
 }

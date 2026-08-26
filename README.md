@@ -14,6 +14,8 @@ https://mcp.hasdata.com/api/mcp?apis=instagram
 [![tool contract](https://github.com/HasData/instagram-mcp/actions/workflows/contract.yml/badge.svg)](https://github.com/HasData/instagram-mcp/actions/workflows/contract.yml)
 [![MCP](https://img.shields.io/badge/MCP-remote%20%7C%20streamable%20HTTP-6366f1?style=flat-square)](https://modelcontextprotocol.io)
 [![Tools](https://img.shields.io/badge/tools-2-10b981?style=flat-square)](#tools)
+[![npm](https://img.shields.io/npm/v/@hasdata/instagram-mcp?style=flat-square&logo=npm&label=npm&color=cb3837)](https://www.npmjs.com/package/@hasdata/instagram-mcp)
+[![PyPI](https://img.shields.io/pypi/v/hasdata-instagram-mcp?style=flat-square&logo=pypi&logoColor=white&label=PyPI&color=3775a9)](https://pypi.org/project/hasdata-instagram-mcp/)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
 ## Contents
@@ -416,6 +418,8 @@ Any MCP client that supports streamable HTTP with custom headers. The configs ab
 | The other platforms we parse | [53 more scraper APIs](https://hasdata.com/apis/?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp) |
 | Plans and credit costs | [Plans and credit costs](https://hasdata.com/prices?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp) |
 | Keys and usage | [HasData dashboard](https://app.hasdata.com?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp) |
+| Node launcher on npm | [@hasdata/instagram-mcp](https://www.npmjs.com/package/@hasdata/instagram-mcp) |
+| Python launcher on PyPI | [hasdata-instagram-mcp](https://pypi.org/project/hasdata-instagram-mcp/) |
 
 ## Development
 
