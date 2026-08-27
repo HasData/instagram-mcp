@@ -33,10 +33,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # No registry-url here on purpose. With it, setup-node writes an .npmrc
+      # carrying _authToken=${NODE_AUTH_TOKEN}, which resolves to a placeholder
+      # when no token is passed. npm then authenticates with that garbage instead
+      # of falling back to OIDC, and a scoped package answers 404.
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: '24'
+      # OIDC trusted publishing landed in npm 11.5.1. Node 24 already ships a
+      # newer npm than that, but pinning the upgrade here keeps the job working
+      # if the runner image drifts back.
+      - name: Upgrade npm for OIDC trusted publishing
+        run: |
+          npm install -g npm@latest
+          npm -v
       - name: Set version from the tag
         run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --allow-same-version
       - name: Publish to npm (OIDC, no token)
