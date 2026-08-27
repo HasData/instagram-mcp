@@ -61,20 +61,32 @@ function parseRpc(raw, id) {
 let nextId = 1;
 
 async function rpc(method, params = {}) {
-    const id = nextId++;
-    const res = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: {
-            'x-api-key': KEY,
-            'Content-Type': 'application/json',
-            Accept: 'application/json, text/event-stream',
-        },
-        body: JSON.stringify({ jsonrpc: '2.0', id, method, params }),
-        signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-    assert.equal(res.status, 200, `${method} returned ${res.status}`);
-    const raw = await res.text();
-    return { raw, body: parseRpc(raw, id) };
+    // The CI key sits on the free plan, where concurrency is 1. When several of
+    // these repos are pushed at once their contract runs collide, and HasData
+    // answers 429 with code concurrency_limit straight away rather than queueing.
+    // That is a plan limit, not a broken contract, so the call is retried before
+    // the test gives up. A 401 still fails on the first attempt.
+    for (let attempt = 1; ; attempt++) {
+        const id = nextId++;
+        const res = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'x-api-key': KEY,
+                'Content-Type': 'application/json',
+                // The server answers over streamable HTTP, so accept both a plain body and a stream.
+                Accept: 'application/json, text/event-stream',
+            },
+            body: JSON.stringify({ jsonrpc: '2.0', id, method, params }),
+            signal: AbortSignal.timeout(TIMEOUT_MS),
+        });
+        assert.equal(res.status, 200, `${method} returned ${res.status}`);
+        const raw = await res.text();
+        if (raw.includes('concurrency_limit') && attempt < 5) {
+            await new Promise((r) => setTimeout(r, attempt * 4000));
+            continue;
+        }
+        return { raw, body: parseRpc(raw, id) };
+    }
 }
 
 // A tools/call result wraps the payload in a single text block holding url, status, text and json.
