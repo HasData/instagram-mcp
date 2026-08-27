@@ -3,7 +3,7 @@
   "name": "com.hasdata/instagram",
   "title": "HasData Instagram",
   "description": "Public Instagram profiles and post feeds by handle, with hashtags and mentions parsed.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "websiteUrl": "https://hasdata.com/apis/instagram-profile-api",
   "repository": {
     "url": "https://github.com/HasData/instagram-mcp",
@@ -27,7 +27,7 @@
     {
       "registryType": "npm",
       "identifier": "@hasdata/instagram-mcp",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "transport": {
         "type": "stdio"
       },
@@ -43,7 +43,7 @@
     {
       "registryType": "pypi",
       "identifier": "hasdata-instagram-mcp",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"
