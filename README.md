@@ -38,7 +38,7 @@ https://mcp.hasdata.com/api/mcp?apis=instagram
 
 ## What you need
 
-An MCP client that speaks streamable HTTP with custom headers. A HasData API key from the [dashboard](https://app.hasdata.com/sign-up?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp), free to create with no card, and the trial covers 100 calls. Nothing else. This is a remote server, so the simplest path is a URL and a header, with no container to run. A stdio-only client can use the `@hasdata/instagram-mcp` (npm) or `hasdata-instagram-mcp` (PyPI) launcher instead.
+An MCP client that speaks streamable HTTP with custom headers. A HasData API key from the [dashboard](https://app.hasdata.com/sign-up?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp), free to create with no card, and the free tier covers 100 calls a month. Nothing else. This is a remote server, so the simplest path is a URL and a header, with no container to run. A stdio-only client can use the `@hasdata/instagram-mcp` (npm) or `hasdata-instagram-mcp` (PyPI) launcher instead.
 
 ## Quick start
 
@@ -337,7 +337,7 @@ Paid plans start at **$49 a month** for 200,000 credits, or 20,000 calls. The un
 
 Your plan also sets concurrency. The free tier allows 1 request at a time, Startup 15, Business 30, Growth 50, and the high-volume plans run from 200 to 1,500. Handle the overflow case defensively in anything unattended, because an agent that fans out across handles will reach the ceiling before you do.
 
-Paging costs a call each time. A prompt that walks a hundred posts across two accounts is eighteen calls and 180 credits. The trial goes further on profile comparisons than on deep feed crawls.
+Paging costs a call each time. A prompt that walks a hundred posts across two accounts is eighteen calls and 180 credits. The free tier goes further on profile comparisons than on deep feed crawls.
 
 ## Tool selection
 
