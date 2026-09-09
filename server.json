@@ -3,7 +3,7 @@
   "name": "com.hasdata/instagram",
   "title": "HasData Instagram",
   "description": "Public Instagram profiles and post feeds by handle, with hashtags and mentions parsed.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "websiteUrl": "https://hasdata.com/apis/instagram-profile-api",
   "repository": {
     "url": "https://github.com/HasData/instagram-mcp",
@@ -16,7 +16,7 @@
       "headers": [
         {
           "name": "x-api-key",
-          "description": "HasData API key, created at app.hasdata.com. The free trial needs no card.",
+          "description": "HasData API key, created at app.hasdata.com. 1,000 free credits every month, no card.",
           "isRequired": true,
           "isSecret": true
         }
@@ -27,14 +27,14 @@
     {
       "registryType": "npm",
       "identifier": "@hasdata/instagram-mcp",
-      "version": "1.0.2",
+      "version": "1.0.4",
       "transport": {
         "type": "stdio"
       },
       "environmentVariables": [
         {
           "name": "HASDATA_API_KEY",
-          "description": "HasData API key, created at app.hasdata.com. The free trial needs no card.",
+          "description": "HasData API key, created at app.hasdata.com. 1,000 free credits every month, no card.",
           "isRequired": true,
           "isSecret": true
         }
@@ -43,7 +43,7 @@
     {
       "registryType": "pypi",
       "identifier": "hasdata-instagram-mcp",
-      "version": "1.0.2",
+      "version": "1.0.4",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"
@@ -51,7 +51,7 @@
       "environmentVariables": [
         {
           "name": "HASDATA_API_KEY",
-          "description": "HasData API key, created at app.hasdata.com. The free trial needs no card.",
+          "description": "HasData API key, created at app.hasdata.com. 1,000 free credits every month, no card.",
           "isRequired": true,
           "isSecret": true
         }

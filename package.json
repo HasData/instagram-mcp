@@ -2,7 +2,7 @@
   "name": "@hasdata/instagram-mcp",
   "mcpName": "com.hasdata/instagram",
   "version": "1.0.1",
-  "description": "MCP server for public Instagram data through HasData's hosted API: profile lookup by handle and public post feed, as structured JSON. Reads public data only.",
+  "description": "MCP server for public Instagram data through HasData's hosted API: profile lookup by handle and public post feed, as structured JSON. Reads public data only. 1,000 free credits every month.",
   "type": "module",
   "bin": {
     "hasdata-instagram-mcp": "index.mjs"
