@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "hasdata-instagram-mcp",
+  "version": "1.0.1",
+  "description": "Instagram MCP server for Cursor. Public profiles and post feeds by handle with follower counts, captions, hashtags and mentions parsed, as structured JSON. Remote MCP server hosted by HasData, connects over streamable HTTP with your HasData API key.",
+  "author": {
+    "name": "HasData",
+    "url": "https://hasdata.com"
+  },
+  "homepage": "https://hasdata.com/apis/instagram-profile-api",
+  "repository": "https://github.com/HasData/instagram-mcp",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "instagram",
+    "instagram-mcp",
+    "profile",
+    "posts",
+    "model-context-protocol",
+    "hasdata",
+    "scraper"
+  ]
+}

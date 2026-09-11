@@ -1,0 +1,12 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "instagram": {
+      "type": "streamable-http",
+      "url": "https://mcp.hasdata.com/api/mcp?apis=instagram",
+      "headers": {
+        "x-api-key": "YOUR_HASDATA_API_KEY"
+      }
+    }
+  }
+}
