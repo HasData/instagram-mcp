@@ -214,10 +214,10 @@ Two things make these work. Hashtags and mentions arrive as arrays parsed out of
 
 ## Tools
 
-| Tool | Credits | What it returns |
-| :--- | :--- | :--- |
-| `hasdata_instagram_posts_getInstagramPosts` | 10 | Fetches the latest posts of a public Instagram account by username (handle) and returns each post with caption, hashtags, mentions, likes/comments/plays counts, image… |
-| `hasdata_instagram_profile_getInstagramProfile` | 10 | Fetches a public Instagram profile by username (handle) and returns full name, biography, external link, profile picture URL, followers count, following count, posts… |
+| Tool | What it returns |
+| --- | --- |
+| `hasdata_instagram_posts_getInstagramPosts` | Fetches the latest posts of a public Instagram account by username (handle) and returns each post with caption, hashtags, mentions, likes/comments/plays counts, image…. 10 credits a call |
+| `hasdata_instagram_profile_getInstagramProfile` | Fetches a public Instagram profile by username (handle) and returns full name, biography, external link, profile picture URL, followers count, following count, posts…. 10 credits a call |
 
 Two tools, both read-only, both keyed on a public account handle. Samples below are trimmed from real calls, and the numbers in them move as accounts post. Read them as shapes. Each tool name links to its endpoint reference.
 
