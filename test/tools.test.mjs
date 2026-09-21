@@ -164,7 +164,9 @@ function fetchProfile() {
 // most likely way this file goes stale.
 test('a profile response still carries the documented fields', live, async () => {
     const profile = await fetchProfile();
-    for (const field of [
+    // Report every missing field in one go. Asserting inside the loop stops at the first one,
+    // which hid three further absences when externalUrls disappeared in September 2026.
+    const documented = [
         'username',
         'fullName',
         'biography',
@@ -177,9 +179,9 @@ test('a profile response still carries the documented fields', live, async () =>
         'profilePicUrl',
         'latestPosts',
         'relatedProfiles',
-    ]) {
-        assert.ok(field in profile, `the profile response no longer carries ${field}`);
-    }
+    ];
+    const missing = documented.filter((field) => !(field in profile));
+    assert.deepEqual(missing, [], `the profile response no longer carries: ${missing.join(', ')}`);
     assert.equal(profile.username, HANDLE, `asked for ${HANDLE}, got ${profile.username}`);
     assert.ok(Array.isArray(profile.bioLinks), 'bioLinks is documented as an array');
     // The README tells the reader a profile lookup already includes the recent feed, which is why
@@ -194,20 +196,24 @@ test('post objects still carry the documented fields', live, async () => {
     const profile = await fetchProfile();
     const [first] = profile.latestPosts ?? [];
     assert.ok(first, 'the feed came back empty for an account that posts regularly');
-    for (const field of [
-        'id',
-        'shortcode',
-        'caption',
-        'type',
-        'hashtags',
-        'mentions',
-        'likesCount',
-        'commentsCount',
-        'timestamp',
-        'url',
-    ]) {
-        assert.ok(field in first, `post objects no longer carry ${field}`);
+    // hashtags and mentions are conditional: the API emits them only for posts whose caption
+    // actually carries one. Measured 2026-09-21 over 144 posts from 12 accounts, every one of the
+    // 55 captions containing a # also carried a hashtags array, and none of the others did.
+    // Asserting them unconditionally fails whenever the sampled post happens to have neither.
+    const always = ['id', 'shortcode', 'caption', 'type', 'url'];
+    const conditional = ['hashtags', 'mentions'];
+    const documentedPostFields = [...always, ...conditional, 'likesCount', 'commentsCount', 'timestamp'];
+    const missingPostFields = documentedPostFields.filter(
+        (field) => !(field in first) && !conditional.includes(field),
+    );
+    assert.deepEqual(missingPostFields, [], `post objects no longer carry: ${missingPostFields.join(', ')}`);
+
+    const withHashtag = (profile.latestPosts ?? []).find((post) => /#\w/.test(post.caption ?? ''));
+    if (withHashtag) {
+        assert.ok(Array.isArray(withHashtag.hashtags), 'a caption with a # no longer yields a hashtags array');
     }
-    assert.ok(Array.isArray(first.hashtags), 'hashtags is documented as an array');
-    assert.ok(Array.isArray(first.mentions), 'mentions is documented as an array');
+    const withMention = (profile.latestPosts ?? []).find((post) => /@\w/.test(post.caption ?? ''));
+    if (withMention) {
+        assert.ok(Array.isArray(withMention.mentions), 'a caption with an @ no longer yields a mentions array');
+    }
 });
