@@ -1,0 +1,30 @@
+---
+description: How to pull public Instagram profiles and post feeds through the HasData MCP server
+alwaysApply: false
+---
+
+# Instagram through HasData
+
+Two tools, both keyed on `handle`. `hasdata_instagram_profile_getInstagramProfile` returns the account, and `hasdata_instagram_posts_getInstagramPosts` returns its feed with `limit` and `nextPageToken`.
+
+The profile already embeds `latestPosts`, so a question about the account and its recent work is one call rather than two.
+
+## What a post does not carry
+
+A post holds `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `alt`, `displayUrl`, `ownerUsername` and `ownerId`. There is no like count, no comment count and no timestamp. A task that ranks posts by engagement cannot be answered from this payload, and the honest reply is to say so rather than to rank by caption length or position.
+
+`mentions` appears on many posts and `hashtags` on fewer, so both are optional. Parsing the caption yourself finds the same tags, which is the reliable route when coverage matters.
+
+## Twelve is the ceiling
+
+One call returns twelve posts. `limit` above that still returns twelve, so a larger feed comes from following `nextPageToken` rather than from asking for more. The first page also repeats the twelve the profile already gave you, which makes the profile call the cheaper start.
+
+## Public, private and broken
+
+A private account answers with `private: true` and little else. Branch on that flag before reading anything else, because the rest of the payload is thin by design rather than missing by accident.
+
+A handle that does not resolve comes back with `isError` true and a 400. Read the error text rather than only the flag, because the same flag carries a 401 for a bad key and `MCP error -32602` for a schema violation, and reporting a key problem as a missing account sends the reader after the wrong bug.
+
+`id`, `username`, `followersCount`, `followsCount`, `profilePicUrl` and `fbid` are always there. `fullName`, `biography`, `verified`, `bioLinks` and `latestPosts` arrive on public accounts only, so read them defensively.
+
+Each successful call spends credits from the connected account, and paging the feed is a call per page.
