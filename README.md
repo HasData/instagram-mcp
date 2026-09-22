@@ -233,13 +233,13 @@ One public profile by handle.
 | :--- | :--- | :--- | :--- |
 | `handle` | string | yes | Username without the `@`, as it appears in the profile URL |
 
-Returns `id`, `username`, `fullName`, `biography`, `businessCategory`, `verified`, `isBusinessAccount` and `isProfessionalAccount`, the counters `followersCount`, `followsCount`, `postsCount`, `highlightsCount` and `igtvVideoCount`, both `profilePicUrl` and `profilePicUrlHD`, and the arrays `latestPosts`, `latestIgtvVideos` and `relatedProfiles`.
+Returns `id`, `username`, `fullName`, `biography`, `verified`, the counters `followersCount` and `followsCount`, `profilePicUrl`, the internal `fbid`, the `bioLinks` array and `latestPosts`.
 
-The core identity fields and the follower and following counts come back for every public account. The fields beyond that depend on what the account itself exposes, so read the optional ones with a default.
+What is guaranteed and what is not, measured across twenty accounts: `id`, `username`, `followersCount`, `followsCount`, `profilePicUrl` and `fbid` came back every time. `fullName`, `biography`, `verified`, `bioLinks` and `latestPosts` came back for every public account and are the ones to read with a default.
 
-> Links live in two fields that are not the same thing. `bioLinks` is the array of every link in the bio. `externalUrls` is a single string despite the plural name, and it holds the primary link, sometimes with a trailing slash the array version lacks. Read `bioLinks` when you want them all.
+> A private account answers with `private: true` and little else. No bio, no counters beyond the follower numbers, no posts. Branch on that flag before you touch the rest of the payload.
 
-> `latestPosts` and `latestIgtvVideos` do not carry identical fields. Video entries add `taggedUsers`, and the post objects here omit the `productType` that the posts tool includes. Code that walks both arrays through one parser has to treat the extra keys as optional.
+> `bioLinks` is an array of objects, not strings. Each entry carries `url`, `title`, Instagram's own `redirectUrl` wrapper and `linkType`. Read `.url` when you want the destination.
 
 ```json
 {
@@ -247,26 +247,22 @@ The core identity fields and the follower and following counts come back for eve
   "username": "nasa",
   "fullName": "NASA",
   "biography": "Making the seemingly impossible, possible. ✨",
-  "businessCategory": "Government Agencies",
-  "bioLinks": [
-    "https://www.nasa.gov",
-    "https://science.nasa.gov/mission/roman-space-telescope/",
-    "http://intern.nasa.gov"
-  ],
-  "externalUrls": "https://www.nasa.gov/",
-  "followersCount": 104397669,
-  "followsCount": 92,
-  "postsCount": 4887,
   "verified": true,
-  "isBusinessAccount": true,
-  "latestPosts": [ "…twelve most recent posts, same shape as the posts tool…" ],
-  "relatedProfiles": [
-    { "id": "…", "username": "…", "fullName": "…", "profilePicUrl": "…" }
-  ]
+  "followersCount": 104345698,
+  "followsCount": 91,
+  "profilePicUrl": "https://scontent.cdninstagram.com/v/t51.2885-19/…",
+  "fbid": "17841401474538262",
+  "bioLinks": [
+    {
+      "url": "https://www.nasa.gov",
+      "title": "NASA.gov Homepage",
+      "redirectUrl": "https://l.instagram.com/?u=https%3A%2F%2Fwww.nasa.gov%2F&e=…",
+      "linkType": "external"
+    }
+  ],
+  "latestPosts": [ "…the most recent posts, same shape as the posts tool…" ]
 }
 ```
-
-`relatedProfiles` is Instagram's own suggestion list for the account and runs to a few dozen entries. It is a cheap way to widen a competitor set without guessing handles.
 
 ### Get Instagram posts
 
@@ -282,34 +278,33 @@ The public post feed for one handle, page by page.
 
 > `limit` is a rough cap rather than an exact count. Twelve posts is one Instagram page and the hard ceiling for a single call, and `limit: 50` returns twelve. Below the ceiling the count lands near the number you asked for without always matching it, and how near depends on the account. Measured on `@nasa`, a limit of 2 returned 4 posts, 6 returned 6, 11 returned 10 and 13 returned 12. Treat it as "no more than roughly this many" and read the array length rather than assuming it.
 
-> The response repeats the account's identity fields alongside the posts. `username`, `id`, `fullName`, `verified` and both avatar URLs arrive on every page. Handy for labelling rows, and worth knowing before you make a separate profile call to get them.
+The response carries `posts` and `pagination`, and nothing else. Earlier versions repeated the account's identity fields alongside the feed, so code written against that shape needs a profile call for the name and avatar.
 
-Each post carries `id`, `shortcode`, `caption`, `type`, `productType`, `hashtags`, `mentions`, `likesCount`, `commentsCount`, `timestamp`, `url`, `displayUrl`, `images`, `dimensionsWidth`, `dimensionsHeight`, `ownerId` and `ownerUsername`.
+Each post carries `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `alt`, `ownerUsername` and `ownerId`, plus `displayUrl` on all but the occasional entry. `hashtags` and `mentions` appear only when the caption has them: across 177 sampled posts, mentions turned up in about half and hashtags in about a quarter.
+
+> Engagement counters are not in this payload. There is no `likesCount`, `commentsCount` or `timestamp` on a post, so ranking by popularity or filtering by date has to come from somewhere else.
 
 ```json
 {
-  "username": "nasa",
-  "id": "528817151",
-  "fullName": "NASA",
-  "verified": true,
-  "latestPosts": [
+  "posts": [
     {
-      "id": "3967213292204992434",
-      "shortcode": "DcOX3hWFiey",
-      "caption": "With your powers combined…\n\nThis colorful picture of the cosmos is the product of teamwork between our @NASAHubble, @NASAWebb, and @NASAChandraXray telescopes. […] \n\n#NASA #Universe #Nebula",
-      "type": "Image",
-      "hashtags": ["#NASA", "#Universe", "#Nebula"],
-      "mentions": ["@NASAHubble", "@NASAWebb", "@NASAChandraXray"],
-      "likesCount": 78412,
-      "commentsCount": 402,
-      "timestamp": "2026-08-18T16:02:11.000Z",
-      "url": "https://www.instagram.com/p/DcOX3hWFiey/"
+      "id": "3983374110243288826",
+      "shortcode": "DdHyaYAifb6",
+      "caption": "Cementing their names in history.\n\nThe Artemis III crew is leaving their mark […] @NASAKennedy",
+      "type": "Carousel",
+      "productType": "carousel_container",
+      "mentions": ["@NASAKennedy", "@EuropeanSpaceAgency", "@Astro_Luca"],
+      "url": "https://www.instagram.com/p/DdHyaYAifb6/",
+      "displayUrl": "https://scontent.cdninstagram.com/v/t51.…",
+      "alt": "Photo by NASA on September 10, 2026. May be an image of text.",
+      "ownerUsername": "nasa",
+      "ownerId": "528817151"
     }
   ],
   "pagination": {
     "morePostsAvailable": true,
-    "nextPageToken": "3968050822236429248_528817151",
-    "hasdataLink": "https://api.hasdata.com/scrape/instagram/posts?handle=nasa&nextPageToken=3968050822236429248_528817151"
+    "nextPageToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…",
+    "hasdataLink": "https://api.hasdata.com/scrape/instagram/posts?handle=nasa&nextPageToken=…"
   }
 }
 ```
