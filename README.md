@@ -9,7 +9,7 @@ It reads public data about accounts. It does not act as an account. There is not
 **1,000 free credits every month, no card required**, which is 100 Instagram calls.
 
 ```
-https://mcp.hasdata.com/api/mcp?apis=instagram
+https://mcp.hasdata.com/mcp?apis=instagram
 ```
 
 [![Glama score](https://glama.ai/mcp/servers/HasData/instagram-mcp/badges/score.svg)](https://glama.ai/mcp/servers/HasData/instagram-mcp)
@@ -44,7 +44,7 @@ An MCP client that speaks streamable HTTP with custom headers. A HasData API key
 
 | | |
 | :--- | :--- |
-| URL | `https://mcp.hasdata.com/api/mcp?apis=instagram` |
+| URL | `https://mcp.hasdata.com/mcp?apis=instagram` |
 | Transport | HTTP, streamable |
 | Auth header | `x-api-key: HASDATA_API_KEY` |
 
@@ -56,7 +56,7 @@ Clients with OAuth support can add the same URL as a connector and sign in witho
 <summary><b>Claude Code</b></summary>
 
 ```bash
-claude mcp add --transport http instagram "https://mcp.hasdata.com/api/mcp?apis=instagram" \
+claude mcp add --transport http instagram "https://mcp.hasdata.com/mcp?apis=instagram" \
   --header "x-api-key: HASDATA_API_KEY"
 ```
 
@@ -108,7 +108,7 @@ A client with OAuth support can instead add the URL as a custom connector and sk
 {
   "mcpServers": {
     "instagram": {
-      "url": "https://mcp.hasdata.com/api/mcp?apis=instagram",
+      "url": "https://mcp.hasdata.com/mcp?apis=instagram",
       "headers": { "x-api-key": "HASDATA_API_KEY" }
     }
   }
@@ -126,7 +126,7 @@ A client with OAuth support can instead add the URL as a custom connector and sk
 {
   "mcpServers": {
     "instagram": {
-      "serverUrl": "https://mcp.hasdata.com/api/mcp?apis=instagram",
+      "serverUrl": "https://mcp.hasdata.com/mcp?apis=instagram",
       "headers": { "x-api-key": "HASDATA_API_KEY" }
     }
   }
@@ -142,7 +142,7 @@ A client with OAuth support can instead add the URL as a custom connector and sk
 {
   "mcpServers": {
     "instagram": {
-      "url": "https://mcp.hasdata.com/api/mcp?apis=instagram",
+      "url": "https://mcp.hasdata.com/mcp?apis=instagram",
       "type": "streamableHttp",
       "headers": { "x-api-key": "HASDATA_API_KEY" },
       "disabled": false
@@ -163,7 +163,7 @@ A client with OAuth support can instead add the URL as a custom connector and sk
   "servers": {
     "instagram": {
       "type": "http",
-      "url": "https://mcp.hasdata.com/api/mcp?apis=instagram",
+      "url": "https://mcp.hasdata.com/mcp?apis=instagram",
       "headers": { "x-api-key": "HASDATA_API_KEY" }
     }
   }
@@ -181,7 +181,7 @@ A client with OAuth support can instead add the URL as a custom connector and sk
 {
   "mcpServers": {
     "instagram": {
-      "httpUrl": "https://mcp.hasdata.com/api/mcp?apis=instagram",
+      "httpUrl": "https://mcp.hasdata.com/mcp?apis=instagram",
       "headers": { "x-api-key": "HASDATA_API_KEY" }
     }
   }

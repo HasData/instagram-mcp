@@ -12,7 +12,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://mcp.hasdata.com/api/mcp?apis=instagram",
+      "url": "https://mcp.hasdata.com/mcp?apis=instagram",
       "headers": [
         {
           "name": "x-api-key",

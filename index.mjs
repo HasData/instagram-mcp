@@ -6,7 +6,7 @@ import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 
-const URL = 'https://mcp.hasdata.com/api/mcp?apis=instagram';
+const URL = 'https://mcp.hasdata.com/mcp?apis=instagram';
 const key = process.env.HASDATA_API_KEY;
 if (!key) {
   process.stderr.write('HASDATA_API_KEY is not set. Create a free key at https://app.hasdata.com and set HASDATA_API_KEY.\n');
