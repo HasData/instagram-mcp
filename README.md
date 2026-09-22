@@ -194,11 +194,11 @@ A client with OAuth support can instead add the URL as a custom connector and sk
 
 Each of these is one tool call unless the count says otherwise.
 
-> Pull the profile for `@nasa` and tell me the follower count, the category and every link in the bio.
+> Pull the profile for `@nasa` and tell me the follower count, whether it is verified, and every link in the bio.
 
 *One call, 10 credits. For a public account the profile response already carries the twelve most recent posts, so a follow-up about recent activity needs no second call.*
 
-> Compare `@nasa`, `@natgeo` and `@bbcearth` on followers, posts published and whether each is a business account.
+> Compare `@nasa`, `@natgeo` and `@bbcearth` on followers, accounts followed and whether each is verified.
 
 *Three calls, 30 credits. One per handle.*
 
@@ -206,9 +206,9 @@ Each of these is one tool call unless the count says otherwise.
 
 *Five calls, 50 credits. Twelve posts arrive per call, and fifty takes five pages.*
 
-> For the last twelve posts on `@natgeo`, give me likes, comments and the accounts mentioned in each caption.
+> For the last twelve posts on `@natgeo`, list the accounts mentioned in each caption and the type of each post.
 
-*One call, 10 credits. Engagement counts and mentions come parsed in the post objects.*
+*One call, 10 credits. Mentions and hashtags arrive parsed out of the caption in the post objects.*
 
 Two things make these work. Hashtags and mentions arrive as arrays parsed out of the caption, and an agent counts them instead of running a regex over prose. And a profile lookup returns the recent feed in the same response. That is why so many research questions land in a single call.
 
@@ -216,8 +216,8 @@ Two things make these work. Hashtags and mentions arrive as arrays parsed out of
 
 | Tool | What it returns |
 | --- | --- |
-| `hasdata_instagram_posts_getInstagramPosts` | Fetches the latest posts of a public Instagram account by username (handle) and returns each post with caption, hashtags, mentions, likes/comments/plays counts, image…. 10 credits a call |
-| `hasdata_instagram_profile_getInstagramProfile` | Fetches a public Instagram profile by username (handle) and returns full name, biography, external link, profile picture URL, followers count, following count, posts…. 10 credits a call |
+| `hasdata_instagram_posts_getInstagramPosts` | Fetches the latest posts of a public Instagram account by username (handle) and returns each post with its id, shortcode, caption, type, productType, permalink, image URL and alt text, plus hashtags and mentions parsed out of the caption. No engagement counters and no timestamp. 10 credits a call |
+| `hasdata_instagram_profile_getInstagramProfile` | Fetches a public Instagram profile by username (handle) and returns id, full name, biography, bio links, profile picture URL, followers and following counts, the verified flag and the twelve most recent posts. 10 credits a call |
 
 Two tools, both read-only, both keyed on a public account handle. Samples below are trimmed from real calls, and the numbers in them move as accounts post. Read them as shapes. Each tool name links to its endpoint reference.
 
