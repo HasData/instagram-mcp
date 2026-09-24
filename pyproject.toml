@@ -7,7 +7,7 @@ requires-python = ">=3.10"
 license = { text = "MIT" }
 keywords = ["mcp", "instagram", "profile", "posts", "model-context-protocol", "hasdata"]
 # mcp is pinned below 2 because mcp-proxy 0.12.0 imports request_ctx, removed in the mcp 2.x SDK.
-dependencies = ["mcp-proxy>=0.12.0", "mcp>=1.17,<2"]
+dependencies = ["mcp-proxy>=0.12.0", "mcp>=1.28.1,<2"]
 
 [project.urls]
 Homepage = "https://hasdata.com/apis/instagram-profile-api"
