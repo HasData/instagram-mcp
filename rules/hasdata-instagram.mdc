@@ -5,13 +5,13 @@ alwaysApply: false
 
 # Instagram through HasData
 
-Two tools, both keyed on `handle`. `hasdata_instagram_profile_getInstagramProfile` returns the account, and `hasdata_instagram_posts_getInstagramPosts` returns its feed with `limit` and `nextPageToken`.
+Three tools. Two are keyed on `handle`, the third on the URL of a single post. `hasdata_instagram_profile_getInstagramProfile` returns the account, and `hasdata_instagram_posts_getInstagramPosts` returns its feed with `limit` and `nextPageToken`.
 
 The profile already embeds `latestPosts`, so a question about the account and its recent work is one call rather than two.
 
 ## What a post does not carry
 
-A post holds `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `alt`, `displayUrl`, `ownerUsername` and `ownerId`. There is no like count, no comment count and no timestamp. A task that ranks posts by engagement cannot be answered from this payload, and the honest reply is to say so rather than to rank by caption length or position.
+A post holds `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `alt`, `displayUrl`, `ownerUsername` and `ownerId`. There is no like count, no comment count and no timestamp, so the feed alone cannot rank posts by engagement. Do not rank by caption length or position to fake it. Those numbers live on `hasdata_instagram_comments_getInstagramComments`, which takes a post URL and returns a `post` object carrying `likesCount`, `commentsCount` and `timestamp` beside the comment thread. Ranking a feed therefore costs one extra call per post, which is worth saying out loud before making twelve of them.
 
 `mentions` appears on many posts and `hashtags` on fewer, so both are optional. Parsing the caption yourself finds the same tags, which is the reliable route when coverage matters.
 

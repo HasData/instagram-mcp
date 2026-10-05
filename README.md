@@ -216,10 +216,11 @@ Two things make these work. Hashtags and mentions arrive as arrays parsed out of
 
 | Tool | What it returns |
 | --- | --- |
+| `hasdata_instagram_comments_getInstagramComments` | Fetches the comments on a public post or reel by its URL and returns the post itself with its caption, media, `likesCount`, `commentsCount` and `timestamp`, then each comment with its text, like count, timestamp and author. 10 credits a call |
 | `hasdata_instagram_posts_getInstagramPosts` | Fetches the latest posts of a public Instagram account by username (handle) and returns each post with its id, shortcode, caption, type, productType, permalink, image URL and alt text, plus hashtags and mentions parsed out of the caption. No engagement counters and no timestamp. 10 credits a call |
 | `hasdata_instagram_profile_getInstagramProfile` | Fetches a public Instagram profile by username (handle) and returns id, full name, biography, bio links, profile picture URL, followers and following counts, the verified flag and the twelve most recent posts. 10 credits a call |
 
-Two tools, both read-only, both keyed on a public account handle. Samples below are trimmed from real calls, and the numbers in them move as accounts post. Read them as shapes. Each tool name links to its endpoint reference.
+Three tools, all read-only. Two are keyed on a public account handle, the third on the URL of a single post. Samples below are trimmed from real calls, and the numbers in them move as accounts post. Read them as shapes. Each tool name links to its endpoint reference.
 
 The samples are the payload, not the whole response. A `tools/call` result carries one text block, and that text is itself JSON holding `url`, `status`, `text` and `json`, with the scraped data under `json`. From a raw JSON-RPC response the path is `result.content[0].text`, parsed, then `.json`. A chat client unwraps that for you and code talking to the endpoint directly does not.
 
@@ -310,6 +311,46 @@ Each post carries `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `a
 ```
 
 Hashtags and mentions keep their `#` and `@` prefixes, which matters if you are joining them against a list you built yourself. `morePostsAvailable` is the flag to branch on when paging, and `hasdataLink` is the same next page expressed as a REST URL, useful when you want to reproduce an agent's call by hand.
+
+### Get the comments on a post
+
+[`hasdata_instagram_comments_getInstagramComments`](https://docs.hasdata.com/apis/instagram/comments?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp)
+
+The comment thread under one post or reel, and the post itself.
+
+| Parameter | Type | Required | Notes |
+| :--- | :--- | :--- | :--- |
+| `url` | string | yes | A `/p/`, `/reel/` or `/tv/` link, with or without the username segment |
+| `nextPageToken` | string | | Token from the previous response |
+| `includeMusic` | boolean | | Also return the sound of a reel in `post.music`, for licensed tracks and original audio alike |
+
+This is the tool that carries engagement. The `post` object here holds `likesCount`, `commentsCount` and `timestamp`, none of which the feed returns, so how one post performed is answerable through this call even though it cannot be answered from `getInstagramPosts`. The cost is one call per post.
+
+Returns `post`, `comments` and `pagination`. A comment carries `id`, `text`, `timestamp`, `likesCount` and an `owner` with `id`, `username` and `profilePicUrl`. `pagination` reports `moreCommentsAvailable` beside `nextPageToken`, so a walk can stop without spending a request to discover the end.
+
+```json
+{
+  "post": {
+    "shortcode": "DdHyaYAifb6",
+    "type": "Carousel",
+    "productType": "carousel_container",
+    "ownerUsername": "nasa",
+    "timestamp": "2026-09-10T21:20:24.000Z",
+    "likesCount": 120648,
+    "commentsCount": 1020
+  },
+  "comments": [
+    {
+      "id": "18188486875408374",
+      "text": "I like to become a astronomer",
+      "timestamp": "2026-10-05T07:38:17.000Z",
+      "likesCount": 0,
+      "owner": { "id": "40744210101", "username": "nisha_karippolil" }
+    }
+  ],
+  "pagination": { "moreCommentsAvailable": true, "nextPageToken": "…" }
+}
+```
 
 ## Errors and failure paths
 
