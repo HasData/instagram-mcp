@@ -1,0 +1,165 @@
+{
+  "author": "HasData",
+  "authorUrl": "https://github.com/HasData",
+  "cloudEndpoint": "https://mcp.hasdata.com/mcp?apis=instagram",
+  "description": "HasData web scraping APIs as MCP tools: search engines, AI search, maps, e-commerce, real estate, jobs, travel, social media and any web page.",
+  "homepage": "https://hasdata.com",
+  "icon": "https://hasdata.com/favicon.svg",
+  "identifier": "hasdata-instagram-mcp",
+  "name": "Instagram MCP Server",
+  "prompts": [
+    {
+      "name": "instagram_profile",
+      "title": "Instagram profile",
+      "description": "Look up a public Instagram profile.",
+      "arguments": [
+        {
+          "name": "username",
+          "description": "Instagram username, no @",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "resources": [],
+  "tags": [
+    "mcp",
+    "instagram",
+    "instagram-mcp",
+    "profile",
+    "posts",
+    "model-context-protocol",
+    "hasdata",
+    "scraper"
+  ],
+  "tools": [
+    {
+      "name": "hasdata_instagram_comments_getInstagramComments",
+      "title": "instagram_comments: GET /",
+      "description": "Get Instagram Comments\n\nFetches the comments on a public Instagram post or reel from its URL (`/p/`, `/reel/` or `/tv/` links, with or without the username segment). The first page returns the post (id, shortcode, caption, hashtags, mentions, likes and comments counts, owner, display image, images, video URL, DASH manifest, hasAudio flag, tagged location, and every carousel item as childPosts) plus the first comments; with includeMusic=true the post also carries music (audioId, artistName, songName) for the reel's licensed track or original sound; later pages return comments only. Each comment has text, timestamp, like count, reply count, and owner (username, verified flag, profile picture, hasdataLink to the profile endpoint). Supports token-based pagination via nextPageToken. Instagram sizes pages server-side (about 10 to 15 comments). Use for sentiment analysis, engagement research, or building comment datasets from posts discovered via the posts API, whose items carry a hasdataLink to this endpoint.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The URL of the Instagram post or reel, for example `https://www.instagram.com/p/Ddjis3vETcP/` or `https://www.instagram.com/instagram/reel/DcymgItMFao/`."
+          },
+          "nextPageToken": {
+            "type": "string",
+            "description": "Defines the next page token. Use the `nextPageToken` value returned by the previous response. Omit it to fetch the first page."
+          },
+          "includeMusic": {
+            "type": "boolean",
+            "description": "Also return the reel's sound (audio ID, artist and song title) in `post.music`, for both licensed tracks and original audio. This takes an extra request to Instagram on the first page and is ignored when `nextPageToken` is set. Default is false."
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "oauth2",
+            "scopes": [
+              "mcp:tools"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "hasdata_instagram_posts_getInstagramPosts",
+      "title": "instagram_posts: GET /",
+      "description": "Get Instagram Posts\n\nFetches the latest posts of a public Instagram account by username (handle) and returns each post with caption, hashtags, mentions, image URL, and publish date. Supports token-based pagination via nextPageToken to walk older posts. Use to monitor competitor content, track engagement of creator posts, or build datasets of account content for vetting and analytics.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "handle": {
+            "type": "string",
+            "description": "The Instagram username of the account whose posts you want to scrape, without the `@` symbol."
+          },
+          "limit": {
+            "type": "number",
+            "description": "The maximum number of posts to retrieve per request. Defaults to 12."
+          },
+          "nextPageToken": {
+            "type": "string",
+            "description": "Defines the next page token. It is used for retrieving the next page results. Use the `nextPageToken` value returned by the previous response."
+          }
+        },
+        "required": [
+          "handle"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "oauth2",
+            "scopes": [
+              "mcp:tools"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "hasdata_instagram_profile_getInstagramProfile",
+      "title": "instagram_profile: GET /",
+      "description": "Get Instagram Profile\n\nFetches a public Instagram profile by username (handle) and returns full name, biography, external link, profile picture URL, followers count, following count, and verified/private flags. Use to enrich CRM/lead records, verify influencer reach before outreach, monitor competitor accounts, or build datasets of creator metadata for vetting and analytics.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "handle": {
+            "type": "string",
+            "description": "The Instagram username of the profile you want to scrape, without the `@` symbol."
+          }
+        },
+        "required": [
+          "handle"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "_meta": {
+        "securitySchemes": [
+          {
+            "type": "oauth2",
+            "scopes": [
+              "mcp:tools"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "version": "1.0.1"
+}

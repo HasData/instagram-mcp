@@ -217,7 +217,7 @@ Two things make these work. Hashtags and mentions arrive as arrays parsed out of
 | Tool | What it returns |
 | --- | --- |
 | `hasdata_instagram_comments_getInstagramComments` | Fetches the comments on a public post or reel by its URL and returns the post itself with its caption, media, `likesCount`, `commentsCount` and `timestamp`, then each comment with its text, like count, timestamp and author. 10 credits a call |
-| `hasdata_instagram_posts_getInstagramPosts` | Fetches the latest posts of a public Instagram account by username (handle) and returns each post with its id, shortcode, caption, type, productType, permalink, image URL and alt text, plus hashtags and mentions parsed out of the caption. No engagement counters and no timestamp. 10 credits a call |
+| `hasdata_instagram_posts_getInstagramPosts` | Fetches the latest posts of a public Instagram account by username (handle) and returns each post with its id, shortcode, caption, type, productType, permalink, media URLs and pixel size, like and comment counts, the posting time, plus hashtags, mentions, tagged users and carousel members. 10 credits a call |
 | `hasdata_instagram_profile_getInstagramProfile` | Fetches a public Instagram profile by username (handle) and returns id, full name, biography, bio links, profile picture URL, followers and following counts, the verified flag and the twelve most recent posts. 10 credits a call |
 
 Three tools, all read-only. Two are keyed on a public account handle, the third on the URL of a single post. Samples below are trimmed from real calls, and the numbers in them move as accounts post. Read them as shapes. Each tool name links to its endpoint reference.
@@ -281,9 +281,9 @@ The public post feed for one handle, page by page.
 
 The response carries `posts` and `pagination`, and nothing else. Earlier versions repeated the account's identity fields alongside the feed, so code written against that shape needs a profile call for the name and avatar.
 
-Each post carries `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `alt`, `ownerUsername` and `ownerId`, plus `displayUrl` on all but the occasional entry. `hashtags` and `mentions` appear only when the caption has them: across 177 sampled posts, mentions turned up in about half and hashtags in about a quarter.
+Each post carries `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `ownerUsername`, `ownerId`, `displayUrl` and `images`, the pixel size as `dimensionsWidth` and `dimensionsHeight`, and `hasdataLink`, a ready-made link to the comments endpoint for that post. `hashtags` and `mentions` appear only when the caption has them. A carousel carries its members in `childPosts`, and `taggedUsers` lists the accounts tagged in the media.
 
-> Engagement counters are not in this payload. There is no `likesCount`, `commentsCount` or `timestamp` on a post, so ranking by popularity or filtering by date has to come from somewhere else.
+> Engagement counters arrive with the feed. Each post carries `likesCount` and `commentsCount`, and the posting time twice: `timestamp` as a full ISO instant and `publishDate` as the calendar day. Ranking a feed by popularity or filtering it by date needs no second call. This changed on 2026-10-07; earlier versions of the payload carried none of the four.
 
 ```json
 {
@@ -296,10 +296,19 @@ Each post carries `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `a
       "productType": "carousel_container",
       "mentions": ["@NASAKennedy", "@EuropeanSpaceAgency", "@Astro_Luca"],
       "url": "https://www.instagram.com/p/DdHyaYAifb6/",
+      "hasdataLink": "https://api.hasdata.com/scrape/instagram/comments?url=…",
+      "commentsCount": 1053,
+      "likesCount": 121490,
+      "dimensionsWidth": 1440,
+      "dimensionsHeight": 1800,
       "displayUrl": "https://scontent.cdninstagram.com/v/t51.…",
-      "alt": "Photo by NASA on September 10, 2026. May be an image of text.",
+      "images": ["https://scontent.cdninstagram.com/v/t51.…"],
+      "timestamp": "2026-09-10T21:20:24.000Z",
+      "publishDate": "2026-09-10",
       "ownerUsername": "nasa",
-      "ownerId": "528817151"
+      "ownerId": "528817151",
+      "taggedUsers": [{ "id": "549403870", "username": "nasakennedy", "fullName": "NASA's Kennedy Space Center" }],
+      "childPosts": [{ "id": "3983374043612570267", "type": "Image", "productType": "carousel_item" }]
     }
   ],
   "pagination": {
@@ -324,7 +333,7 @@ The comment thread under one post or reel, and the post itself.
 | `nextPageToken` | string | | Token from the previous response |
 | `includeMusic` | boolean | | Also return the sound of a reel in `post.music`, for licensed tracks and original audio alike |
 
-This is the tool that carries engagement. The `post` object here holds `likesCount`, `commentsCount` and `timestamp`, none of which the feed returns, so how one post performed is answerable through this call even though it cannot be answered from `getInstagramPosts`. The cost is one call per post.
+Use this when the comment thread itself is the point. The `post` object repeats the engagement figures the feed already carries, so ranking or dating a feed does not need this call, and spending one request per post to collect numbers that arrived with the feed is waste.
 
 Returns `post`, `comments` and `pagination`. A comment carries `id`, `text`, `timestamp`, `likesCount` and an `owner` with `id`, `username` and `profilePicUrl`. `pagination` reports `moreCommentsAvailable` beside `nextPageToken`, so a walk can stop without spending a request to discover the end.
 

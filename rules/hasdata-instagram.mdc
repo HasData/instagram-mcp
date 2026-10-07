@@ -11,7 +11,7 @@ The profile already embeds `latestPosts`, so a question about the account and it
 
 ## What a post does not carry
 
-A post holds `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `alt`, `displayUrl`, `ownerUsername` and `ownerId`. There is no like count, no comment count and no timestamp, so the feed alone cannot rank posts by engagement. Do not rank by caption length or position to fake it. Those numbers live on `hasdata_instagram_comments_getInstagramComments`, which takes a post URL and returns a `post` object carrying `likesCount`, `commentsCount` and `timestamp` beside the comment thread. Ranking a feed therefore costs one extra call per post, which is worth saying out loud before making twelve of them.
+A post holds `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `displayUrl`, `images`, `dimensionsWidth`, `dimensionsHeight`, `ownerUsername`, `ownerId` and `hasdataLink`. It also carries `likesCount`, `commentsCount`, `timestamp` and `publishDate`, so the feed alone can rank posts by engagement and filter them by date. Do not spend a call on `hasdata_instagram_comments_getInstagramComments` to collect numbers the feed already returned; reach for it when the comment thread itself is wanted. `mentions` and `hashtags` appear only when the caption has them, `taggedUsers` lists accounts tagged in the media, and a carousel puts its members in `childPosts`.
 
 `mentions` appears on many posts and `hashtags` on fewer, so both are optional. Parsing the caption yourself finds the same tags, which is the reliable route when coverage matters.
 
