@@ -16,6 +16,7 @@ https://mcp.hasdata.com/mcp?apis=instagram
 [![tool contract](https://github.com/HasData/instagram-mcp/actions/workflows/contract.yml/badge.svg)](https://github.com/HasData/instagram-mcp/actions/workflows/contract.yml)
 [![MCP](https://img.shields.io/badge/MCP-remote%20%7C%20streamable%20HTTP-6366f1?style=flat-square)](https://modelcontextprotocol.io)
 [![Tools](https://img.shields.io/badge/tools-2-10b981?style=flat-square)](#tools)
+- [Prompts and resources](#prompts-and-resources)
 [![npm](https://img.shields.io/npm/v/@hasdata/instagram-mcp?style=flat-square&logo=npm&label=npm&color=cb3837)](https://www.npmjs.com/package/@hasdata/instagram-mcp)
 [![PyPI](https://img.shields.io/pypi/v/hasdata-instagram-mcp?style=flat-square&logo=pypi&logoColor=white&label=PyPI&color=3775a9)](https://pypi.org/project/hasdata-instagram-mcp/)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
@@ -360,6 +361,16 @@ Returns `post`, `comments` and `pagination`. A comment carries `id`, `text`, `ti
   "pagination": { "moreCommentsAvailable": true, "nextPageToken": "…" }
 }
 ```
+
+## Prompts and resources
+
+The server ships one prompt, a ready-made workflow a client can offer instead of making the user compose a tool call.
+
+| Prompt | What it does |
+| --- | --- |
+| `instagram_profile` | Look up a public Instagram profile. |
+
+The list is served without an API key, so a client can read it before a user has signed up.
 
 ## Errors and failure paths
 
