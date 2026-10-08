@@ -12,6 +12,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 
 const ENDPOINT = 'https://mcp.hasdata.com/mcp?apis=instagram';
 const KEY = process.env.HASDATA_API_KEY;
@@ -209,3 +210,58 @@ test('post objects still carry the documented fields', live, async () => {
     }
 });
 
+// The prompts and resources section of the README is generated from the live server, and the
+// server changes it without a commit here: Indeed gained two parameter resources overnight on
+// 2026-10-08 and the table fell behind the same day. These checks need no API key, because
+// prompts/list and resources/list are served without one, so they run on a fork too.
+// README prompts and resources section
+const README_MD = fs.readFileSync(new URL('../README.md', import.meta.url), 'utf8');
+
+async function anonymousRpc(method) {
+    const id = nextId++;
+    const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json, text/event-stream' },
+        body: JSON.stringify({ jsonrpc: '2.0', id, method, params: {} }),
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    assert.equal(res.status, 200, `${method} returned ${res.status}`);
+    return parseRpc(await res.text(), id).result;
+}
+
+// The section writes "ships one prompt" for a single entry and "ships 7 prompts" otherwise.
+const statedCount = (verb) => {
+    const m = README_MD.match(new RegExp(verb + String.raw`\s+(one|\d+)\s`));
+    if (!m) return null;
+    return m[1] === 'one' ? 1 : Number(m[1]);
+};
+
+test('the README states how many prompts the server serves', async () => {
+    const { prompts } = await anonymousRpc('prompts/list');
+    const stated = statedCount('ships');
+    if (!prompts.length) {
+        assert.equal(stated, null, 'the README claims prompts the server does not serve');
+        return;
+    }
+    assert.ok(stated !== null, 'the server serves prompts and the README does not say how many');
+    assert.equal(stated, prompts.length, `the README says ${stated} prompts, the server serves ${prompts.length}`);
+});
+
+test('the README states how many resources the server serves', async () => {
+    const { resources } = await anonymousRpc('resources/list');
+    const stated = statedCount('exposes');
+    if (!resources.length) {
+        assert.equal(stated, null, 'the README claims resources the server does not serve');
+        return;
+    }
+    assert.ok(stated !== null, 'the server serves resources and the README does not say how many');
+    assert.equal(stated, resources.length, `the README says ${stated} resources, the server serves ${resources.length}`);
+});
+
+test('every parameter with a fixed list is named in the README', async () => {
+    const { resources } = await anonymousRpc('resources/list');
+    const missing = resources
+        .map((r) => (r.uri || '').split('/').pop())
+        .filter((p) => p && !README_MD.includes(`\`${p}\``));
+    assert.deepEqual(missing, [], `parameters the README does not name: ${missing.join(', ')}`);
+});
