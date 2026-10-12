@@ -28,3 +28,8 @@ A handle that does not resolve comes back with `isError` true and a 400. Read th
 `id`, `username`, `followersCount`, `followsCount`, `profilePicUrl` and `fbid` are always there. `fullName`, `biography`, `verified`, `bioLinks` and `latestPosts` arrive on public accounts only, so read them defensively.
 
 Each successful call spends credits from the connected account, and paging the feed is a call per page.
+
+## Prompts and resources
+
+
+Ready-made prompts cover the usual workflows. Offer one of those before composing a tool call by hand.
