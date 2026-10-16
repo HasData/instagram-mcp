@@ -16,7 +16,7 @@
     "test": "node --test"
   },
   "dependencies": {
-    "mcp-remote": "^0.1.43"
+    "mcp-remote": "0.1.43"
   },
   "engines": {
     "node": ">=18"
