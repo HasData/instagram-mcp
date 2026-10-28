@@ -2,7 +2,7 @@
 
 <!-- mcp-name: com.hasdata/instagram -->
 
-A hosted Model Context Protocol (MCP) server that gives Claude, Cursor, Windsurf and any other MCP client two read-only Instagram tools. Look up a public profile by handle, and walk its public post feed, as structured JSON.
+A hosted Model Context Protocol (MCP) server that gives Claude, Cursor, Windsurf and any other MCP client read-only Instagram tools. Look up a public profile by handle, walk its public post feed and read the comments on a public post or reel, as structured JSON.
 
 It reads public data about accounts. It does not act as an account. There is nothing to connect and no account of yours involved anywhere in the flow.
 
@@ -402,9 +402,9 @@ Paging costs a call each time. A prompt that walks a hundred posts across two ac
 
 ## Tool selection
 
-`?apis=instagram` exposes exactly these two tools. The parameter takes a list, and `?apis=instagram,tiktok,youtube` gives your agent three social platforms at once. Drop the parameter and you get everything HasData exposes, which is currently 57 tools.
+`?apis=instagram` exposes exactly these tools. The parameter takes a list, and `?apis=instagram,tiktok,youtube` gives your agent three social platforms at once. Drop the parameter and you get every tool HasData exposes.
 
-A narrow list is usually the better default. A model choosing between two tools picks correctly more often than one choosing between fifty-seven, and the tool descriptions themselves cost context on every turn.
+A narrow list is usually the better default. A model choosing among a few tools picks correctly more often than one choosing among the whole catalog, and the tool descriptions themselves cost context on every turn.
 
 Cross-platform comparison is the usual reason to widen the list. Ask the same question of an Instagram handle and a TikTok handle and it is one prompt once both are exposed.
 
@@ -430,7 +430,7 @@ Two rows decide it. If you need to post, comment or reply, this server cannot he
 
 The deciding axis is scope, not polish. A server built around your own login can only reach the accounts you administer, however good its output is. This one answers the same question for any public handle, and the fields come back as parsed arrays that cost nothing to aggregate.
 
-**What this server does not do.** No comments, no stories, no reels beyond what the feed reports, no direct messages, no hashtag or location search, and nothing that writes. It reads two things well.
+**What this server does not do.** No stories, no reels beyond what the feed reports, no direct messages, no hashtag or location search, and nothing that writes. It reads profiles, feeds and post comments well.
 
 ## FAQ
 
@@ -476,7 +476,7 @@ Any MCP client that supports streamable HTTP with custom headers. The configs ab
 | :--- | :--- |
 | Product pages and request builder | [Instagram Profile API](https://hasdata.com/apis/instagram-profile-api?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp) and [Instagram Posts API](https://hasdata.com/apis/instagram-posts-api?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp) |
 | Server documentation | [MCP server docs](https://docs.hasdata.com/mcp-server?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp) |
-| All 57 tools in one server | [HasData/hasdata-mcp](https://github.com/HasData/hasdata-mcp) |
+| Every HasData tool in one server | [HasData/hasdata-mcp](https://github.com/HasData/hasdata-mcp) |
 | Client walkthroughs | [MCP clients and integrations](https://hasdata.com/integrations/mcp?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp) |
 | The other platforms we parse | [53 more scraper APIs](https://hasdata.com/apis/?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp) |
 | Plans and credit costs | [Plans and credit costs](https://hasdata.com/prices?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp) |
@@ -488,7 +488,7 @@ Any MCP client that supports streamable HTTP with custom headers. The configs ab
 
 This repository is configuration and documentation for a remote server. There is no build step and nothing to containerize.
 
-It does carry a contract test. The README promises two tools with specific parameters, and the upstream tool list can change without a commit here, and that would leave this file quietly lying to you. The test asserts the promise and runs weekly in CI as well as on every push.
+It does carry a contract test. The README promises its tools with specific parameters, and the upstream tool list can change without a commit here, and that would leave this file quietly lying to you. The test asserts the promise and runs weekly in CI as well as on every push.
 
 ```bash
 HASDATA_API_KEY=your_key_here npm test

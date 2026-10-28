@@ -1,6 +1,6 @@
 // Tool contract test.
 //
-// The README promises two tools and a specific parameter set for each. Either can change upstream
+// The README promises its tools and a specific parameter set for each. Either can change upstream
 // without a commit here, and the README would start lying silently. These checks catch that before
 // a user does.
 //
