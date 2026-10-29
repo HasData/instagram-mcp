@@ -2,7 +2,7 @@
 
 <!-- mcp-name: com.hasdata/instagram -->
 
-A hosted Model Context Protocol (MCP) server that gives Claude, Cursor, Windsurf and any other MCP client read-only Instagram tools. Look up a public profile by handle, walk its public post feed and read the comments on a public post or reel, as structured JSON.
+A hosted [Instagram MCP server](https://hasdata.com/mcp/instagram?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp&utm_content=readme-intro) that gives Claude, Cursor, Windsurf and any other MCP client read-only Instagram tools. Look up a public profile by handle, walk its public post feed and read the comments on a public post or reel, as structured JSON.
 
 It reads public data about accounts. It does not act as an account. There is nothing to connect and no account of yours involved anywhere in the flow.
 
@@ -396,7 +396,7 @@ The free tier is **1,000 credits every month with no card**, or 100 Instagram ca
 
 Paid plans start at **$59 a month** for 200,000 credits, or 20,000 calls. The unit price falls with volume, from **$2.95 per 1,000 calls** on the entry plan to **$1.19** on Basic and **$0.83** across the Growth tiers. Current figures live on the [pricing page](https://hasdata.com/prices?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp).
 
-Your plan also sets concurrency. The free tier allows 1 request at a time, Startup 5, Basic 15, and the Growth tiers run from 50 to 500. Handle the overflow case defensively in anything unattended, because an agent that fans out across handles will reach the ceiling before you do.
+Your plan also sets concurrency. The free tier allows 5 requests at a time, Startup 5, Basic 15, and the Growth tiers run from 50 to 500. Handle the overflow case defensively in anything unattended, because an agent that fans out across handles will reach the ceiling before you do.
 
 Paging costs a call each time. A prompt that walks a hundred posts across two accounts is eighteen calls and 180 credits. The free tier goes further on profile comparisons than on deep feed crawls.
 
