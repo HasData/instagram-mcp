@@ -226,7 +226,7 @@ Two things make these work. Hashtags and mentions arrive as arrays parsed out of
 | `hasdata_instagram_profile_getInstagramProfile` | Fetches a public Instagram profile by username (handle) and returns id, full name, biography, bio links, profile picture URL, followers and following counts, the verified flag and the twelve most recent posts. 10 credits a call |
 | `hasdata_instagram_reels_getInstagramReels` | Fetches the Reels tab of a public Instagram account by username (handle), newest first with collab reels included, and returns each reel with play, like and comment counts, caption, hashtags, mentions, cover image, video URL, owner, tagged users and timestamp. 10 credits a call |
 
-All of them are read-only. The comments tool takes the URL of a single post, and the others take a public account handle. Samples below are trimmed from real calls, and the numbers in them move as accounts post. Read them as shapes. Each tool name links to its endpoint reference.
+All of them are read-only. The comments tool takes the URL of a single post, and the others take a public account handle. Samples below are trimmed from real calls, and the numbers in them move as accounts post. Read them as shapes. A tool name links to its endpoint reference where the docs publish one.
 
 The samples are the payload, not the whole response. A `tools/call` result carries one text block, and that text is itself JSON holding `url`, `status`, `text` and `json`, with the scraped data under `json`. From a raw JSON-RPC response the path is `result.content[0].text`, parsed, then `.json`. A chat client unwraps that for you and code talking to the endpoint directly does not.
 
@@ -329,7 +329,7 @@ Hashtags and mentions keep their `#` and `@` prefixes, which matters if you are 
 
 ### Get an account's reels
 
-[`hasdata_instagram_reels_getInstagramReels`](https://docs.hasdata.com/apis/instagram/reels?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp)
+`hasdata_instagram_reels_getInstagramReels`
 
 The Reels tab of one handle, newest first, page by page.
 
