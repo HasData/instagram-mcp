@@ -2,7 +2,7 @@
 
 <!-- mcp-name: com.hasdata/instagram -->
 
-A hosted [Instagram MCP server](https://hasdata.com/mcp/instagram?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp&utm_content=readme-intro) that gives Claude, Cursor, Windsurf and any other MCP client read-only Instagram tools. Look up a public profile by handle, walk its public post feed and read the comments on a public post or reel, as structured JSON.
+A hosted [Instagram MCP server](https://hasdata.com/mcp/instagram?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp&utm_content=readme-intro) that gives Claude, Cursor, Windsurf and any other MCP client read-only Instagram tools. Look up a public profile by handle, walk its public post feed and Reels tab, and read the comments on a public post or reel, as structured JSON.
 
 It reads public data about accounts. It does not act as an account. There is nothing to connect and no account of yours involved anywhere in the flow.
 
@@ -15,7 +15,7 @@ https://mcp.hasdata.com/mcp?apis=instagram
 [![Glama score](https://glama.ai/mcp/servers/HasData/instagram-mcp/badges/score.svg)](https://glama.ai/mcp/servers/HasData/instagram-mcp)
 [![tool contract](https://github.com/HasData/instagram-mcp/actions/workflows/contract.yml/badge.svg)](https://github.com/HasData/instagram-mcp/actions/workflows/contract.yml)
 [![MCP](https://img.shields.io/badge/MCP-remote%20%7C%20streamable%20HTTP-6366f1?style=flat-square)](https://modelcontextprotocol.io)
-[![Tools](https://img.shields.io/badge/tools-2-10b981?style=flat-square)](#tools)
+[![Tools](https://img.shields.io/badge/tools-4-10b981?style=flat-square)](#tools)
 - [Prompts and resources](#prompts-and-resources)
 [![npm](https://img.shields.io/npm/v/@hasdata/instagram-mcp?style=flat-square&logo=npm&label=npm&color=cb3837)](https://www.npmjs.com/package/@hasdata/instagram-mcp)
 [![PyPI](https://img.shields.io/pypi/v/hasdata-instagram-mcp?style=flat-square&logo=pypi&logoColor=white&label=PyPI&color=3775a9)](https://pypi.org/project/hasdata-instagram-mcp/)
@@ -211,6 +211,10 @@ Each of these is one tool call unless the count says otherwise.
 
 *One call, 10 credits. Mentions and hashtags arrive parsed out of the caption in the post objects.*
 
+> Rank the twelve most recent reels on `@natgeo` by plays and show likes and comments next to each.
+
+*One call, 10 credits. Plays, likes and comments arrive together on every reel.*
+
 Two things make these work. Hashtags and mentions arrive as arrays parsed out of the caption, and an agent counts them instead of running a regex over prose. And a profile lookup returns the recent feed in the same response. That is why so many research questions land in a single call.
 
 ## Tools
@@ -220,8 +224,9 @@ Two things make these work. Hashtags and mentions arrive as arrays parsed out of
 | `hasdata_instagram_comments_getInstagramComments` | Fetches the comments on a public post or reel by its URL and returns the post itself with its caption, media, `likesCount`, `commentsCount` and `timestamp`, then each comment with its text, like count, timestamp and author. 10 credits a call |
 | `hasdata_instagram_posts_getInstagramPosts` | Fetches the latest posts of a public Instagram account by username (handle) and returns each post with its id, shortcode, caption, type, productType, permalink, media URLs and pixel size, like and comment counts, the posting time, plus hashtags, mentions, tagged users and carousel members. 10 credits a call |
 | `hasdata_instagram_profile_getInstagramProfile` | Fetches a public Instagram profile by username (handle) and returns id, full name, biography, bio links, profile picture URL, followers and following counts, the verified flag and the twelve most recent posts. 10 credits a call |
+| `hasdata_instagram_reels_getInstagramReels` | Fetches the Reels tab of a public Instagram account by username (handle), newest first with collab reels included, and returns each reel with play, like and comment counts, caption, hashtags, mentions, cover image, video URL, owner, tagged users and timestamp. 10 credits a call |
 
-Three tools, all read-only. Two are keyed on a public account handle, the third on the URL of a single post. Samples below are trimmed from real calls, and the numbers in them move as accounts post. Read them as shapes. Each tool name links to its endpoint reference.
+All of them are read-only. The comments tool takes the URL of a single post, and the others take a public account handle. Samples below are trimmed from real calls, and the numbers in them move as accounts post. Read them as shapes. Each tool name links to its endpoint reference.
 
 The samples are the payload, not the whole response. A `tools/call` result carries one text block, and that text is itself JSON holding `url`, `status`, `text` and `json`, with the scraped data under `json`. From a raw JSON-RPC response the path is `result.content[0].text`, parsed, then `.json`. A chat client unwraps that for you and code talking to the endpoint directly does not.
 
@@ -321,6 +326,58 @@ Each post carries `id`, `shortcode`, `caption`, `type`, `productType`, `url`, `o
 ```
 
 Hashtags and mentions keep their `#` and `@` prefixes, which matters if you are joining them against a list you built yourself. `morePostsAvailable` is the flag to branch on when paging, and `hasdataLink` is the same next page expressed as a REST URL, useful when you want to reproduce an agent's call by hand.
+
+### Get an account's reels
+
+[`hasdata_instagram_reels_getInstagramReels`](https://docs.hasdata.com/apis/instagram/reels?utm_source=github&utm_medium=syndication&utm_campaign=instagram-mcp)
+
+The Reels tab of one handle, newest first, page by page.
+
+| Parameter | Type | Required | Notes |
+| :--- | :--- | :--- | :--- |
+| `handle` | string | yes | Username without the `@` |
+| `limit` | number | | Reels in one response, up to 12. Defaults to 12 |
+| `nextPageToken` | string | | The `pagination.nextPageToken` from the previous response |
+
+The response carries `reels` and `pagination`. A reel has the same shape as a post from the feed and adds `playsCount` and `videoUrl`, so plays, likes and comments arrive together and ranking an account's reels by reach takes no second call. Each reel carries `hasdataLink` to its comment thread.
+
+> Collab reels are part of the tab. A reel the account co-posted with someone else shows up in its Reels, and `ownerUsername` and `ownerId` then name the account that published it, not the handle you asked for. Filter on `ownerUsername` when only the account's own reels count. In a call for `@nasa` on 2026-11-09, both reels returned were collabs published by other accounts.
+
+```json
+{
+  "reels": [
+    {
+      "id": "4026005540840053099",
+      "shortcode": "DffPrVthplr",
+      "caption": "Talk about a view! 🪂🇺🇸 Looking down on the historic Shuttle Landing Facility as the Army Golden Knights jump in to kick off Day 2 of MAX POWER! 🚀✈️",
+      "type": "Video",
+      "productType": "clips",
+      "url": "https://www.instagram.com/p/DffPrVthplr/",
+      "hasdataLink": "https://api.hasdata.com/scrape/instagram/comments?url=…",
+      "commentsCount": 473,
+      "likesCount": 30199,
+      "playsCount": 3468416,
+      "dimensionsWidth": 1080,
+      "dimensionsHeight": 1920,
+      "displayUrl": "https://instagram.fmex31-1.fna.fbcdn.net/v/t51.…",
+      "images": ["https://instagram.fmex31-1.fna.fbcdn.net/v/t51.…"],
+      "videoUrl": "https://instagram.fmex36-1.fna.fbcdn.net/o1/v/t2/f2/m86/….mp4",
+      "timestamp": "2026-11-08T17:02:53.000Z",
+      "publishDate": "2026-11-08",
+      "ownerUsername": "airdotshow",
+      "ownerId": "27179220808",
+      "taggedUsers": [{ "id": "528817151", "username": "nasa", "fullName": "NASA", "isVerified": true, "profilePicUrl": "https://…" }]
+    }
+  ],
+  "pagination": {
+    "moreReelsAvailable": true,
+    "nextPageToken": "AQHTZHNas4CpVqvVxNpO1eBpm4iB…",
+    "hasdataLink": "https://api.hasdata.com/scrape/instagram/reels?handle=nasa&limit=2&nextPageToken=…"
+  }
+}
+```
+
+`videoUrl` and the image links are signed CDN addresses that expire, so download the file you need soon after the call rather than storing the link. `moreReelsAvailable` is the flag to branch on when paging.
 
 ### Get the comments on a post
 
@@ -430,13 +487,13 @@ Two rows decide it. If you need to post, comment or reply, this server cannot he
 
 The deciding axis is scope, not polish. A server built around your own login can only reach the accounts you administer, however good its output is. This one answers the same question for any public handle, and the fields come back as parsed arrays that cost nothing to aggregate.
 
-**What this server does not do.** No stories, no reels beyond what the feed reports, no direct messages, no hashtag or location search, and nothing that writes. It reads profiles, feeds and post comments well.
+**What this server does not do.** No stories, no direct messages, no hashtag or location search, and nothing that writes. It reads profiles, feeds, reels and post comments well.
 
 ## FAQ
 
 ### What is an Instagram MCP server?
 
-A server that exposes Instagram data as tools an AI client can call. The client sends a tool call over the Model Context Protocol, the server fetches the data and returns structured JSON, and the model works with the result and never sees a page of HTML. This one exposes two read-only tools and runs remotely. The client connects to a URL and starts no local process.
+A server that exposes Instagram data as tools an AI client can call. The client sends a tool call over the Model Context Protocol, the server fetches the data and returns structured JSON, and the model works with the result and never sees a page of HTML. This one exposes read-only tools and runs remotely. The client connects to a URL and starts no local process.
 
 ### Is there an official Instagram MCP server?
 

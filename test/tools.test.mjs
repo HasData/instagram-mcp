@@ -21,12 +21,14 @@ const TIMEOUT_MS = 60_000;
 const PROFILE = 'hasdata_instagram_profile_getInstagramProfile';
 const POSTS = 'hasdata_instagram_posts_getInstagramPosts';
 const COMMENTS = 'hasdata_instagram_comments_getInstagramComments';
+const REELS = 'hasdata_instagram_reels_getInstagramReels';
 
 // Parameters the README documents, and whether it documents them as required.
 const PARAMS = {
     [PROFILE]: { handle: true },
     [POSTS]: { handle: true, limit: false, nextPageToken: false },
     [COMMENTS]: { url: true, nextPageToken: false, includeMusic: false },
+    [REELS]: { handle: true, limit: false, nextPageToken: false },
 };
 
 // A public institutional account, chosen because it posts often enough that the feed is never
@@ -117,10 +119,10 @@ function listTools() {
 
 const live = { skip: KEY ? false : 'HASDATA_API_KEY is not set, skipping the live checks' };
 
-test('apis=instagram exposes exactly the three documented tools', live, async () => {
+test('apis=instagram exposes exactly the documented tools', live, async () => {
     const tools = await listTools();
     const names = tools.map((t) => t.name).sort();
-    assert.deepEqual(names, [COMMENTS, POSTS, PROFILE].sort(), `the tool list is now ${names.join(', ')}`);
+    assert.deepEqual(names, [COMMENTS, POSTS, PROFILE, REELS].sort(), `the tool list is now ${names.join(', ')}`);
 });
 
 test('every documented parameter still exists, and required stays required', live, async () => {
@@ -141,7 +143,7 @@ test('every documented parameter still exists, and required stays required', liv
     }
 });
 
-test('both tools carry a description', live, async () => {
+test('every tool carries a description', live, async () => {
     const tools = await listTools();
     for (const tool of tools) {
         assert.ok(
